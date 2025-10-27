@@ -3,13 +3,17 @@ import bodyParser from 'body-parser';
 import pkg from 'whatsapp-web.js';
 import qrcode from 'qrcode-terminal';
 import axios from 'axios';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
 const { Client, LocalAuth } = pkg;
 
 const app = express();
 const PORT = 3000;
 const ADMIN_NUMBER = '1234567890@c.us';
-const RESEND_API_KEY = 're_6SpgmfKT_8YeSJdbtMhvMU5XYpkNNWxiJ';
-const CLIENT_EMAIL = 'abonnementnova.store@gmail.com';
+const RESEND_API_KEY = process.env.RESEND_API_KEY;
+const CLIENT_EMAIL = process.env.CLIENT_EMAIL;
 
 const pendingConfirmations = new Map();  
 
