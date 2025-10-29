@@ -360,10 +360,17 @@ const sendEmailNotification = async (formData) => {
 };
 
 app.post('/api/form-data', async (req, res) => {
+  console.log('\n' + '='.repeat(50));
+  console.log('📥 Received webhook request');
+  console.log('Timestamp:', new Date().toISOString());
+  console.log('Request body:', JSON.stringify(req.body, null, 2));
+  console.log('='.repeat(50));
+
   try {
     const { name, phone, email, offer, connections, page_url } = req.body;
 
     if (!isClientReady) {
+      console.error('❌ WhatsApp client not ready');
       return res.status(503).json({ 
         success: false, 
         message: 'WhatsApp bot is not ready yet' 
@@ -371,11 +378,14 @@ app.post('/api/form-data', async (req, res) => {
     }
 
     if (!phone) {
+      console.error('❌ Missing phone number');
       return res.status(400).json({ 
         success: false, 
         message: 'Phone number is required' 
       });
     }
+
+    console.log('✅ Validation passed, processing order...');
 
     const userName = name || 'Client';
     const userEmail = email || 'Non fourni';
@@ -401,17 +411,24 @@ app.post('/api/form-data', async (req, res) => {
 🌐 *Page:* ${pageUrl}`;
 
     pendingConfirmations.set(userWhatsAppId, { paymentLink, price });
+    console.log(`💾 Stored pending confirmation for ${userWhatsAppId}`);
     
-await client.sendMessage(userWhatsAppId, userMessage);
-await new Promise(resolve => setTimeout(resolve, 1000)); 
-await client.sendMessage(userWhatsAppId, confirmationMessage);
+    console.log(`📤 Sending summary message to ${userWhatsAppId}...`);
+    await client.sendMessage(userWhatsAppId, userMessage);
+    console.log('✅ Summary message sent');
+    
+    await new Promise(resolve => setTimeout(resolve, 1000)); 
+    
+    console.log(`📤 Sending confirmation options to ${userWhatsAppId}...`);
+    await client.sendMessage(userWhatsAppId, confirmationMessage);
+    console.log('✅ Confirmation options sent');
 
-const FORWARD_NUMBER = '212628468203@c.us'; 
-const forwardMessage = `Nouvelle Commande ✅✅ :\n\nNumero whatsapp: ${phone}\nNom complet : ${userName}\nPack : ${userOffer}\n\nNuméro cnx: ${userConnections}\nGmail: ${userEmail}\nPrix: ${price}€`;
+    const FORWARD_NUMBER = '212628468203@c.us'; 
+    const forwardMessage = `Nouvelle Commande ✅✅ :\n\nNumero whatsapp: ${phone}\nNom complet : ${userName}\nPack : ${userOffer}\n\nNuméro cnx: ${userConnections}\nGmail: ${userEmail}\nPrix: ${price}€`;
 
-await client.sendMessage(FORWARD_NUMBER, forwardMessage);
-
-console.log(`Order message sent to ${FORWARD_NUMBER}`);
+    console.log(`📤 Forwarding order to admin ${FORWARD_NUMBER}...`);
+    await client.sendMessage(FORWARD_NUMBER, forwardMessage);
+    console.log('✅ Order forwarded to admin');
 
     const emailResult = await sendEmailNotification({
       name: userName,
@@ -439,10 +456,33 @@ console.log(`Order message sent to ${FORWARD_NUMBER}`);
   }
 });
 
+app.get('/', (req, res) => {
+  res.json({
+    service: 'WordPress WhatsApp Bot',
+    status: 'running',
+    whatsappReady: isClientReady,
+    endpoints: {
+      webhook: '/api/form-data',
+      health: '/health',
+      test: '/test'
+    }
+  });
+});
+
 app.get('/health', (req, res) => {
   res.json({ 
     status: 'running',
-    whatsappReady: isClientReady 
+    whatsappReady: isClientReady,
+    timestamp: new Date().toISOString()
+  });
+});
+
+app.get('/test', (req, res) => {
+  console.log('🧪 Test endpoint accessed');
+  res.json({
+    message: 'Bot is accessible!',
+    whatsappReady: isClientReady,
+    timestamp: new Date().toISOString()
   });
 });
 
