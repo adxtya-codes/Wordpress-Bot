@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  whatsapp-bot:
+    build: .
+    container_name: wordpress-whatsapp-bot
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - RESEND_API_KEY=${RESEND_API_KEY}
+      - CLIENT_EMAIL=${CLIENT_EMAIL}
+      - PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
+    volumes:
+      - whatsapp-session:/app/.wwebjs_auth
+      - whatsapp-cache:/app/.wwebjs_cache
+    networks:
+      - whatsapp-network
+
+volumes:
+  whatsapp-session:
+  whatsapp-cache:
+
+networks:
+  whatsapp-network:
+    driver: bridge
