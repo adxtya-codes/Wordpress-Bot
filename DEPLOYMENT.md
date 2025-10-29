@@ -1,8 +1,18 @@
 # Docker Deployment Guide
 
+## What's New in Updated Dockerfile
+
+✅ **Smaller image size** - Using `node:18-bullseye-slim` base  
+✅ **Security hardened** - Runs as non-root user  
+✅ **Better caching** - Optimized layer ordering  
+✅ **Health checks** - Built-in container health monitoring  
+✅ **Resource limits** - Prevents memory issues  
+✅ **Emoji support** - Added font packages  
+
 ## Prerequisites
 - Docker installed on your server
 - Docker Compose installed (optional, but recommended)
+- At least 1GB RAM available
 
 ## Deployment Options
 
