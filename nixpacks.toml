@@ -3,6 +3,7 @@ aptPkgs = [
   "chromium",
   "chromium-sandbox",
   "fonts-liberation",
+  "fonts-noto-color-emoji",
   "libasound2",
   "libatk-bridge2.0-0",
   "libatk1.0-0",
@@ -20,11 +21,20 @@ aptPkgs = [
   "libxfixes3",
   "libxkbcommon0",
   "libxrandr2",
-  "xdg-utils"
+  "libxshmfence1",
+  "xdg-utils",
+  "curl",
+  "wget"
 ]
+nixPkgs = ["bun"]
 
 [phases.install]
-cmds = ["npm install"]
+cmds = ["bun install --production"]
 
 [start]
-cmd = "npm start"
+cmd = "bun run index.js"
+
+[variables]
+PUPPETEER_EXECUTABLE_PATH = "/usr/bin/chromium"
+PUPPETEER_SKIP_CHROMIUM_DOWNLOAD = "true"
+NODE_ENV = "production"
