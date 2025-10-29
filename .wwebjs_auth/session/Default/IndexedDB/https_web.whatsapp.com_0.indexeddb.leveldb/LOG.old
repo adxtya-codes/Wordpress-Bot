@@ -1,0 +1,54 @@
+2025/10/27-22:46:32.385 1acc Reusing MANIFEST C:\Users\Aditya\Desktop\wordpress wa bot\.wwebjs_auth\session\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2025/10/27-22:46:32.386 1acc Recovering log #273
+2025/10/27-22:46:32.408 1acc Reusing old log C:\Users\Aditya\Desktop\wordpress wa bot\.wwebjs_auth\session\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/000273.log 
+2025/10/27-22:46:35.204 1b4c Level-0 table #286: started
+2025/10/27-22:46:35.214 1b4c Level-0 table #286: 53056 bytes OK
+2025/10/27-22:46:35.216 1b4c Delete type=0 #273
+2025/10/27-22:46:35.217 3e18 Manual compaction at level-0 from '\x00\x1a\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x1b\x00\x00\x00' @ 0 : 0; will stop at (end)
+2025/10/27-22:46:39.996 1acc Compacting 1@1 + 9@2 files
+2025/10/27-22:46:40.314 1acc Generated table #287@1: 50240 keys, 2222031 bytes
+2025/10/27-22:46:40.480 1acc Generated table #288@1: 6121 keys, 2154737 bytes
+2025/10/27-22:46:40.625 1acc Generated table #289@1: 2509 keys, 2143428 bytes
+2025/10/27-22:46:40.907 1acc Generated table #290@1: 31674 keys, 2219360 bytes
+2025/10/27-22:46:41.080 1acc Generated table #291@1: 3621 keys, 2123946 bytes
+2025/10/27-22:46:41.397 1acc Generated table #292@1: 87198 keys, 2232271 bytes
+2025/10/27-22:46:41.684 1acc Generated table #293@1: 96705 keys, 2246097 bytes
+2025/10/27-22:46:42.001 1acc Generated table #294@1: 97370 keys, 2245080 bytes
+2025/10/27-22:46:42.125 1acc Generated table #295@1: 34427 keys, 810429 bytes
+2025/10/27-22:46:42.125 1acc Compacted 1@1 + 9@2 files => 18397379 bytes
+2025/10/27-22:46:42.126 1acc compacted to: files[ 0 0 9 0 0 0 0 ]
+2025/10/27-22:46:42.127 1acc Delete type=2 #275
+2025/10/27-22:46:42.127 1acc Delete type=2 #276
+2025/10/27-22:46:42.127 1acc Delete type=2 #277
+2025/10/27-22:46:42.127 1acc Delete type=2 #278
+2025/10/27-22:46:42.127 1acc Delete type=2 #279
+2025/10/27-22:46:42.127 1acc Delete type=2 #280
+2025/10/27-22:46:42.127 1acc Delete type=2 #281
+2025/10/27-22:46:42.127 1acc Delete type=2 #282
+2025/10/27-22:46:42.127 1acc Delete type=2 #283
+2025/10/27-22:46:42.128 1acc Delete type=2 #286
+2025/10/27-22:53:09.950 34b0 Level-0 table #297: started
+2025/10/27-22:53:10.009 34b0 Level-0 table #297: 1197532 bytes OK
+2025/10/27-22:53:10.010 34b0 Delete type=0 #285
+2025/10/27-22:54:41.514 4a70 Compacting 1@1 + 9@2 files
+2025/10/27-22:54:41.771 4a70 Generated table #298@1: 53634 keys, 2224287 bytes
+2025/10/27-22:54:41.834 4a70 Generated table #299@1: 8143 keys, 2157506 bytes
+2025/10/27-22:54:41.878 4a70 Generated table #300@1: 2518 keys, 2145833 bytes
+2025/10/27-22:54:42.023 4a70 Generated table #301@1: 31595 keys, 2219149 bytes
+2025/10/27-22:54:42.091 4a70 Generated table #302@1: 3820 keys, 2124447 bytes
+2025/10/27-22:54:42.298 4a70 Generated table #303@1: 81396 keys, 2226921 bytes
+2025/10/27-22:54:42.562 4a70 Generated table #304@1: 96479 keys, 2245992 bytes
+2025/10/27-22:54:42.843 4a70 Generated table #305@1: 97369 keys, 2245414 bytes
+2025/10/27-22:54:42.963 4a70 Generated table #306@1: 41410 keys, 971186 bytes
+2025/10/27-22:54:42.963 4a70 Compacted 1@1 + 9@2 files => 18560735 bytes
+2025/10/27-22:54:42.964 4a70 compacted to: files[ 0 0 9 0 0 0 0 ]
+2025/10/27-22:54:42.965 4a70 Delete type=2 #287
+2025/10/27-22:54:42.965 4a70 Delete type=2 #288
+2025/10/27-22:54:42.965 4a70 Delete type=2 #289
+2025/10/27-22:54:42.965 4a70 Delete type=2 #290
+2025/10/27-22:54:42.965 4a70 Delete type=2 #291
+2025/10/27-22:54:42.965 4a70 Delete type=2 #292
+2025/10/27-22:54:42.965 4a70 Delete type=2 #293
+2025/10/27-22:54:42.965 4a70 Delete type=2 #294
+2025/10/27-22:54:42.965 4a70 Delete type=2 #295
+2025/10/27-22:54:42.966 4a70 Delete type=2 #297
