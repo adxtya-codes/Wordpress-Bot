@@ -15,12 +15,24 @@ const ADMIN_NUMBER = '1234567890@c.us';
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 const CLIENT_EMAIL = process.env.CLIENT_EMAIL;
 
+// Startup logging
+console.log('='.repeat(50));
+console.log('🤖 WordPress WhatsApp Bot Starting...');
+console.log('='.repeat(50));
+console.log('Node Version:', process.version);
+console.log('Environment:', process.env.NODE_ENV || 'development');
+console.log('Port:', PORT);
+
 // Validate environment variables
+console.log('\n📋 Environment Variables:');
+console.log('RESEND_API_KEY:', RESEND_API_KEY ? '✅ Set' : '❌ Missing');
+console.log('CLIENT_EMAIL:', CLIENT_EMAIL ? '✅ Set' : '❌ Missing');
+console.log('PUPPETEER_EXECUTABLE_PATH:', process.env.PUPPETEER_EXECUTABLE_PATH || 'Not set (will use default)');
+
 if (!RESEND_API_KEY || !CLIENT_EMAIL) {
-  console.error('ERROR: Missing environment variables!');
-  console.error('RESEND_API_KEY:', RESEND_API_KEY ? 'Set' : 'Missing');
-  console.error('CLIENT_EMAIL:', CLIENT_EMAIL ? 'Set' : 'Missing');
-  console.error('Please check your .env file format (no spaces around =)');
+  console.error('\n⚠️  WARNING: Missing environment variables!');
+  console.error('Please set environment variables in Coolify dashboard or .env file');
+  console.error('The bot will start but email notifications may not work.\n');
 }
 
 const pendingConfirmations = new Map();  
@@ -150,15 +162,38 @@ client.on('message', async (msg) => {
   }
 });
 
-// Initialize WhatsApp client with error handling
-client.initialize().catch(err => {
-  console.error('Failed to initialize WhatsApp client:', err);
-  console.error('This might be due to:');
-  console.error('1. Missing Chrome/Chromium installation');
-  console.error('2. Insufficient system resources');
-  console.error('3. Network connectivity issues');
-  process.exit(1);
+// Add more event listeners for debugging
+client.on('loading_screen', (percent, message) => {
+  console.log('LOADING:', percent, message);
 });
+
+client.on('change_state', state => {
+  console.log('STATE CHANGED:', state);
+});
+
+// Initialize WhatsApp client with error handling
+console.log('Starting WhatsApp client initialization...');
+console.log('Chromium path:', process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium');
+
+client.initialize()
+  .then(() => {
+    console.log('WhatsApp client initialization started successfully');
+  })
+  .catch(err => {
+    console.error('❌ Failed to initialize WhatsApp client:', err);
+    console.error('Error stack:', err.stack);
+    console.error('\nThis might be due to:');
+    console.error('1. Missing Chrome/Chromium installation');
+    console.error('2. Insufficient system resources');
+    console.error('3. Network connectivity issues');
+    console.error('4. Incorrect Chromium path');
+    
+    // Don't exit immediately, let's see if we can get more info
+    setTimeout(() => {
+      console.error('Exiting due to initialization failure...');
+      process.exit(1);
+    }, 5000);
+  });
 
 const getPaymentLink = (offer, connections) => {
   const offerLower = (offer || '').toLowerCase();
@@ -412,5 +447,10 @@ app.get('/health', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log('\n' + '='.repeat(50));
+  console.log(`✅ Server running on port ${PORT}`);
+  console.log(`📡 Webhook endpoint: http://localhost:${PORT}/webhook`);
+  console.log(`🏥 Health check: http://localhost:${PORT}/health`);
+  console.log('='.repeat(50));
+  console.log('\n⏳ Waiting for WhatsApp client to initialize...\n');
 });
