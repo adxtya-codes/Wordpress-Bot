@@ -52,12 +52,11 @@ COPY --chown=whatsapp:whatsapp package.json bun.lock* ./
 # Install dependencies using Bun
 RUN bun install --production --frozen-lockfile
 
-# Copy entrypoint script
-COPY --chown=whatsapp:whatsapp entrypoint.sh /app/entrypoint.sh
-RUN chmod +x /app/entrypoint.sh
-
 # Copy application code
 COPY --chown=whatsapp:whatsapp . .
+
+# Set entrypoint script permissions (must be done as root before USER switch)
+RUN chmod +x /app/entrypoint.sh
 
 # Create directories for WhatsApp session data with proper permissions BEFORE switching user
 RUN mkdir -p /app/.wwebjs_auth /app/.wwebjs_cache \
