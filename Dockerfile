@@ -52,6 +52,10 @@ COPY --chown=whatsapp:whatsapp package.json bun.lock* ./
 # Install dependencies using Bun
 RUN bun install --production --frozen-lockfile
 
+# Copy entrypoint script
+COPY --chown=whatsapp:whatsapp entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
 # Copy application code
 COPY --chown=whatsapp:whatsapp . .
 
