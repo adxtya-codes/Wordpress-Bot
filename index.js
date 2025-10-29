@@ -179,14 +179,7 @@ const initializationTimeout = setTimeout(() => {
   if (!isClientReady && !initializationComplete) {
     console.error('\n⏰ WhatsApp client initialization timeout!');
     console.error('The client has been stuck for more than 2 minutes.');
-    console.error('This often happens when:');
-    console.error('1. Auth cache is corrupted');
-    console.error('2. WhatsApp Web is having connectivity issues');
-    console.error('3. The session is stuck in an intermediate state');
-    console.error('\n🔄 Attempting to clear auth cache and restart...');
-
-    // Kill the process to trigger container restart (Docker/Coolify will handle restart)
-    process.exit(1);
+    console.error('Please check the logs and restart manually if needed.');
   }
 }, INIT_TIMEOUT);
 
