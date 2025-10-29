@@ -62,7 +62,11 @@ if (process.env.PUPPETEER_EXECUTABLE_PATH) {
 
 const client = new Client({
   authStrategy: new LocalAuth(),
-  puppeteer: puppeteerConfig
+  puppeteer: puppeteerConfig,
+  // No limits on QR code generation
+  qrMaxRetries: 0, // 0 = unlimited QR retries
+  authTimeoutMs: 0, // 0 = no authentication timeout
+  qrTimeoutMs: 0 // 0 = no QR timeout (will keep generating QR codes indefinitely)
 });
 
 let isClientReady = false;
