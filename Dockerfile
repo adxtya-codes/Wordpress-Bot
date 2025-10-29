@@ -58,13 +58,9 @@ COPY --chown=whatsapp:whatsapp . .
 # Set entrypoint script permissions (must be done as root before USER switch)
 RUN chmod +x /app/entrypoint.sh
 
-# Create directories for WhatsApp session data with proper permissions BEFORE switching user
+# Create directories for WhatsApp session data with proper permissions
 RUN mkdir -p /app/.wwebjs_auth /app/.wwebjs_cache \
-    && chown -R whatsapp:whatsapp /app/.wwebjs_auth /app/.wwebjs_cache \
-    && chmod -R 775 /app/.wwebjs_auth /app/.wwebjs_cache
-
-# Switch to non-root user
-USER whatsapp
+    && chmod -R 777 /app/.wwebjs_auth /app/.wwebjs_cache
 
 # Expose port
 EXPOSE 3000
@@ -76,5 +72,5 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
 # Set entrypoint
 ENTRYPOINT ["/app/entrypoint.sh"]
 
-# Start the application with Bun
+# Start the application with Bun (running as root to avoid permission issues)
 CMD ["bun", "run", "index.js"]
