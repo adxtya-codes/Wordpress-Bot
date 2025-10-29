@@ -15,6 +15,14 @@ const ADMIN_NUMBER = '1234567890@c.us';
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 const CLIENT_EMAIL = process.env.CLIENT_EMAIL;
 
+// Validate environment variables
+if (!RESEND_API_KEY || !CLIENT_EMAIL) {
+  console.error('ERROR: Missing environment variables!');
+  console.error('RESEND_API_KEY:', RESEND_API_KEY ? 'Set' : 'Missing');
+  console.error('CLIENT_EMAIL:', CLIENT_EMAIL ? 'Set' : 'Missing');
+  console.error('Please check your .env file format (no spaces around =)');
+}
+
 const pendingConfirmations = new Map();  
 
 app.use(bodyParser.json());
@@ -132,8 +140,15 @@ client.on('message', async (msg) => {
   }
 });
 
-
-client.initialize();
+// Initialize WhatsApp client with error handling
+client.initialize().catch(err => {
+  console.error('Failed to initialize WhatsApp client:', err);
+  console.error('This might be due to:');
+  console.error('1. Missing Chrome/Chromium installation');
+  console.error('2. Insufficient system resources');
+  console.error('3. Network connectivity issues');
+  process.exit(1);
+});
 
 const getPaymentLink = (offer, connections) => {
   const offerLower = (offer || '').toLowerCase();
