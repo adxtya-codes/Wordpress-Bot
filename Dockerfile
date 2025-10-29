@@ -55,12 +55,12 @@ RUN bun install --production --frozen-lockfile
 # Copy application code
 COPY --chown=whatsapp:whatsapp . .
 
-# Create directories for WhatsApp session data
-RUN mkdir -p /app/.wwebjs_auth /app/.wwebjs_cache \
-    && chown -R whatsapp:whatsapp /app
-
 # Switch to non-root user
 USER whatsapp
+
+# Create directories for WhatsApp session data with proper permissions
+RUN mkdir -p /app/.wwebjs_auth /app/.wwebjs_cache \
+    && chmod -R 755 /app/.wwebjs_auth /app/.wwebjs_cache
 
 # Expose port
 EXPOSE 3000
