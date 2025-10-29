@@ -3,20 +3,20 @@ set -e
 
 echo "🔧 Ensuring correct permissions for WhatsApp session directories..."
 
-# Ensure directories exist with correct permissions
-mkdir -p /app/.wwebjs_auth /app/.wwebjs_cache
-
-# Check if we have write permissions
-if [ ! -w /app/.wwebjs_auth ]; then
-    echo "⚠️  Warning: No write permission for /app/.wwebjs_auth"
-    echo "This might cause issues. Attempting to fix..."
-    # If running as root (e.g., in development), fix permissions
-    if [ "$(id -u)" = "0" ]; then
-        chown -R whatsapp:whatsapp /app/.wwebjs_auth /app/.wwebjs_cache
-        chmod -R 775 /app/.wwebjs_auth /app/.wwebjs_cache
-        echo "✅ Permissions fixed"
-    fi
+# Remove old directories if they exist and recreate them
+if [ -d "/app/.wwebjs_auth" ]; then
+    echo "📁 Existing .wwebjs_auth directory found, fixing permissions..."
+    chmod -R 777 /app/.wwebjs_auth 2>/dev/null || rm -rf /app/.wwebjs_auth
 fi
+
+if [ -d "/app/.wwebjs_cache" ]; then
+    echo "📁 Existing .wwebjs_cache directory found, fixing permissions..."
+    chmod -R 777 /app/.wwebjs_cache 2>/dev/null || rm -rf /app/.wwebjs_cache
+fi
+
+# Ensure directories exist with full permissions
+mkdir -p /app/.wwebjs_auth /app/.wwebjs_cache
+chmod -R 777 /app/.wwebjs_auth /app/.wwebjs_cache
 
 echo "✅ Permission check complete"
 echo "🚀 Starting application..."
