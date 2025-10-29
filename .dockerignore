@@ -4,7 +4,6 @@ npm-debug.log
 .gitignore
 README.md
 .env
-.wwebjs_auth
-.wwebjs_cache
 clear-auth.sh
 DEPLOYMENT_NOTES.md
+FIXES.md
