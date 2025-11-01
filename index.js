@@ -35,7 +35,8 @@ if (!RESEND_API_KEY || !CLIENT_EMAIL) {
   console.error('The bot will start but email notifications may not work.\n');
 }
 
-const pendingConfirmations = new Map();  
+const pendingConfirmations = new Map();
+const confirmationsSent = new Set(); // Track users who have received confirmation options  
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -110,10 +111,12 @@ client.on('message', async (msg) => {
       const paymentMessage = `🎉 *Parfait !* Voici votre lien de paiement sécurisé :\n\n💳 ${pendingData.paymentLink}\n\nMerci pour votre confiance ! 🙏`;
       await msg.reply(paymentMessage);
       pendingConfirmations.delete(senderId);
+      confirmationsSent.delete(senderId); // Clean up tracking
       return;
     } 
     if (messageBody === '2') {
       await msg.reply('💬 Bien sûr ! Posez votre question et notre équipe de support vous assistera rapidement. \n\n🤝 Nous sommes là pour vous aider !');
+      confirmationsSent.delete(senderId); // Clean up tracking
       return;
     }
     const confirmKeywords = [
@@ -147,15 +150,20 @@ client.on('message', async (msg) => {
       const paymentMessage = `🎉 *Parfait !* Voici votre lien de paiement sécurisé :\n\n💳 ${pendingData.paymentLink}\n\nMerci pour votre confiance ! 🙏`;
       await msg.reply(paymentMessage);
       pendingConfirmations.delete(senderId);
+      confirmationsSent.delete(senderId); // Clean up tracking
       return;
     }
 
     if (includesKeyword(questionKeywords)) {
       await msg.reply('💬 Bien sûr ! Posez votre question et notre équipe de support vous assistera rapidement. \n\n🤝 Nous sommes là pour vous aider !');
+      confirmationsSent.delete(senderId); // Clean up tracking
       return;
     }
 
-    await msg.reply('⚠️ Je n\'ai pas bien compris votre réponse. Tapez *1* ou *2* pour continuer.');
+    // Only show fallback if user has already received confirmation options
+    if (confirmationsSent.has(senderId)) {
+      await msg.reply('⚠️ Je n\'ai pas bien compris votre réponse. Tapez *1* ou *2* pour continuer.');
+    }
 
   } catch (error) {
     console.error('Error handling message:', error);
@@ -421,6 +429,7 @@ app.post('/api/form-data', async (req, res) => {
     
     console.log(`📤 Sending confirmation options to ${userWhatsAppId}...`);
     await client.sendMessage(userWhatsAppId, confirmationMessage);
+    confirmationsSent.add(userWhatsAppId); // Mark that user has received options
     console.log('✅ Confirmation options sent');
 
     const FORWARD_NUMBER = '212628468203@c.us'; 
