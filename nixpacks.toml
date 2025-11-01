@@ -1,9 +1,7 @@
 [phases.setup]
 aptPkgs = [
-  "chromium",
-  "chromium-sandbox",
   "fonts-liberation",
-  "libasound2",
+  "libasound2t64",
   "libatk-bridge2.0-0",
   "libatk1.0-0",
   "libatspi2.0-0",
@@ -11,6 +9,7 @@ aptPkgs = [
   "libdbus-1-3",
   "libdrm2",
   "libgbm1",
+  "libglib2.0-0",
   "libgtk-3-0",
   "libnspr4",
   "libnss3",
@@ -20,11 +19,6 @@ aptPkgs = [
   "libxfixes3",
   "libxkbcommon0",
   "libxrandr2",
-  "xdg-utils"
+  "xdg-utils",
+  "ca-certificates"
 ]
-
-[phases.install]
-cmds = ["npm install"]
-
-[start]
-cmd = "npm start"

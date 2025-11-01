@@ -1,0 +1,30 @@
+2025/10/30-02:01:39.449 af03 Reusing MANIFEST /Users/vanxh/Developer/codes/fiverr/Wordpress-Bot-Aditya/.wwebjs_auth/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2025/10/30-02:01:39.449 af03 Recovering log #350
+2025/10/30-02:01:39.476 af03 Reusing old log /Users/vanxh/Developer/codes/fiverr/Wordpress-Bot-Aditya/.wwebjs_auth/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/000350.log 
+2025/10/30-02:01:41.270 27d03 Level-0 table #359: started
+2025/10/30-02:01:41.282 27d03 Level-0 table #359: 509045 bytes OK
+2025/10/30-02:01:41.291 27d03 Delete type=0 #350
+2025/10/30-02:01:41.291 27d03 Manual compaction at level-0 from '\x00\x1d\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x1e\x00\x00\x00' @ 0 : 0; will stop at (end)
+2025/10/30-02:01:42.491 ac03 Compacting 1@1 + 10@2 files
+2025/10/30-02:01:42.531 ac03 Generated table #360@1: 58154 keys, 2231612 bytes
+2025/10/30-02:01:42.553 ac03 Generated table #361@1: 16799 keys, 2170091 bytes
+2025/10/30-02:01:42.571 ac03 Generated table #362@1: 2597 keys, 2143721 bytes
+2025/10/30-02:01:42.604 ac03 Generated table #363@1: 25995 keys, 2213475 bytes
+2025/10/30-02:01:42.622 ac03 Generated table #364@1: 9154 keys, 2135919 bytes
+2025/10/30-02:01:42.656 ac03 Generated table #365@1: 63891 keys, 2202605 bytes
+2025/10/30-02:01:42.699 ac03 Generated table #366@1: 96307 keys, 2243798 bytes
+2025/10/30-02:01:42.741 ac03 Generated table #367@1: 97493 keys, 2247185 bytes
+2025/10/30-02:01:42.770 ac03 Generated table #368@1: 63252 keys, 1473236 bytes
+2025/10/30-02:01:42.770 ac03 Compacted 1@1 + 10@2 files => 19061642 bytes
+2025/10/30-02:01:42.778 ac03 compacted to: files[ 0 0 9 0 0 0 0 ]
+2025/10/30-02:01:42.779 ac03 Delete type=2 #339
+2025/10/30-02:01:42.779 ac03 Delete type=2 #338
+2025/10/30-02:01:42.779 ac03 Delete type=2 #349
+2025/10/30-02:01:42.779 ac03 Delete type=2 #359
+2025/10/30-02:01:42.779 ac03 Delete type=2 #356
+2025/10/30-02:01:42.779 ac03 Delete type=2 #355
+2025/10/30-02:01:42.779 ac03 Delete type=2 #341
+2025/10/30-02:01:42.779 ac03 Delete type=2 #340
+2025/10/30-02:01:42.779 ac03 Delete type=2 #354
+2025/10/30-02:01:42.779 ac03 Delete type=2 #353
+2025/10/30-02:01:42.779 ac03 Delete type=2 #352
