@@ -105,12 +105,16 @@ client.on('message', async (msg) => {
     }
 
     const pendingData = pendingConfirmations.get(senderId);
-    if (!pendingData) return;
+    if (!pendingData) {
+      console.log(`⏭️ Ignoring message from ${senderId} - no pending confirmation`);
+      return;
+    }
 
     if (messageBody === '1') {
       const paymentMessage = `🎉 *Parfait !* Voici votre lien de paiement sécurisé :\n\n💳 ${pendingData.paymentLink}\n\nMerci pour votre confiance ! 🙏`;
       await msg.reply(paymentMessage);
       pendingConfirmations.delete(senderId);
+      console.log(`✅ Deleted pendingConfirmations for ${senderId} after user chose option 1`);
       confirmationsSent.delete(senderId); // Clean up tracking
       return;
     } 
