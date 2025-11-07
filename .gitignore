@@ -4,3 +4,11 @@ node_modules/
 *.log
 .env
 .DS_Store
+
+# Deployment/infra
+coolify*
+docker-compose*
+Dockerfile
+nixpacks*
+COOLIFY-SETUP.md
+DEPLOYMENT.md
