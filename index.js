@@ -117,6 +117,7 @@ client.on('message', async (msg) => {
     if (messageBody === '2') {
       await msg.reply('💬 Bien sûr ! Posez votre question et notre équipe de support vous assistera rapidement. \n\n🤝 Nous sommes là pour vous aider !');
       pendingConfirmations.delete(senderId);
+      console.log('Deleted pendingConfirmations for', senderId, 'after user chose option 2');
       confirmationsSent.delete(senderId); // Clean up tracking
       return;
     }
