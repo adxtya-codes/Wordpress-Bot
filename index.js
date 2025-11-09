@@ -36,7 +36,8 @@ if (!RESEND_API_KEY || !CLIENT_EMAIL) {
 }
 
 const pendingConfirmations = new Map();
-const confirmationsSent = new Set(); // Track users who have received confirmation options  
+const confirmationsSent = new Set(); // Track users who have received confirmation options
+const completedSelections = new Set(); // Track users who have completed their selection (1 or 2) and should not receive further responses  
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -97,6 +98,12 @@ client.on('message', async (msg) => {
 
     console.log("Incoming message:", messageBody);
 
+    // Ignore messages from users who have completed their selection
+    if (completedSelections.has(senderId)) {
+      console.log(`⏭️ Ignoring message from ${senderId} - user has completed selection`);
+      return;
+    }
+
     // Ignore bot's own automated messages
     if (messageBody.includes('voici un resume de vos informations') || 
         messageBody.includes('veuillez confirmer vos informations') ||
@@ -116,6 +123,8 @@ client.on('message', async (msg) => {
       pendingConfirmations.delete(senderId);
       console.log(`✅ Deleted pendingConfirmations for ${senderId} after user chose option 1`);
       confirmationsSent.delete(senderId); // Clean up tracking
+      completedSelections.add(senderId); // Mark user as completed - bot will stop responding
+      console.log(`🛑 Added ${senderId} to completedSelections - bot will no longer respond`);
       return;
     } 
     if (messageBody === '2') {
@@ -123,6 +132,8 @@ client.on('message', async (msg) => {
       pendingConfirmations.delete(senderId);
       console.log('Deleted pendingConfirmations for', senderId, 'after user chose option 2');
       confirmationsSent.delete(senderId); // Clean up tracking
+      completedSelections.add(senderId); // Mark user as completed - bot will stop responding
+      console.log(`🛑 Added ${senderId} to completedSelections - bot will no longer respond`);
       return;
     }
     const confirmKeywords = [
@@ -157,6 +168,8 @@ client.on('message', async (msg) => {
       await msg.reply(paymentMessage);
       pendingConfirmations.delete(senderId);
       confirmationsSent.delete(senderId); // Clean up tracking
+      completedSelections.add(senderId); // Mark user as completed - bot will stop responding
+      console.log(`🛑 Added ${senderId} to completedSelections - bot will no longer respond`);
       return;
     }
 
@@ -164,6 +177,8 @@ client.on('message', async (msg) => {
       await msg.reply('💬 Bien sûr ! Posez votre question et notre équipe de support vous assistera rapidement. \n\n🤝 Nous sommes là pour vous aider !');
       pendingConfirmations.delete(senderId);
       confirmationsSent.delete(senderId); // Clean up tracking
+      completedSelections.add(senderId); // Mark user as completed - bot will stop responding
+      console.log(`🛑 Added ${senderId} to completedSelections - bot will no longer respond`);
       return;
     }
 
