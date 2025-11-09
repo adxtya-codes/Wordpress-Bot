@@ -42,41 +42,42 @@ const completedSelections = new Set(); // Track users who have completed their s
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// Puppeteer configuration - different for local vs production
+const puppeteerConfig = {
+  headless: true,
+  args: [
+    '--no-sandbox',
+    '--disable-setuid-sandbox',
+    '--disable-dev-shm-usage',
+    '--disable-accelerated-2d-canvas',
+    '--no-first-run',
+    '--no-zygote',
+    '--single-process',
+    '--disable-gpu'
+  ]
+};
+
+// Only set executablePath if explicitly provided (production)
+if (process.env.PUPPETEER_EXECUTABLE_PATH) {
+  puppeteerConfig.executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
+}
+
 const client = new Client({
   authStrategy: new LocalAuth(),
-  puppeteer: {
-    headless: true,
-    executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium',
-    args: [
-      '--no-sandbox',
-      '--disable-setuid-sandbox',
-      '--disable-dev-shm-usage',
-      '--disable-accelerated-2d-canvas',
-      '--no-first-run',
-      '--no-zygote',
-      '--single-process',
-      '--disable-gpu'
-    ]
-  }
+  puppeteer: puppeteerConfig,
+  // No limits on QR code generation
+  qrMaxRetries: 0, // 0 = unlimited QR retries
+  authTimeoutMs: 0, // 0 = no authentication timeout
+  qrTimeoutMs: 0 // 0 = no QR timeout (will keep generating QR codes indefinitely)
 });
 
 let isClientReady = false;
+let initializationComplete = false;
+const startTime = Date.now();
 
 client.on('qr', (qr) => {
+  console.log('📱 QR Code received - scan with WhatsApp to authenticate');
   qrcode.generate(qr, { small: true });
-});
-
-client.on('ready', () => {
-  console.log('WhatsApp bot is ready!');
-  isClientReady = true;
-});
-
-client.on('authenticated', () => {
-  console.log('WhatsApp authenticated successfully');
-});
-
-client.on('auth_failure', (msg) => {
-  console.error('Authentication failure:', msg);
 });
 
 client.on('disconnected', (reason) => {
@@ -201,15 +202,49 @@ client.on('change_state', state => {
   console.log('STATE CHANGED:', state);
 });
 
-// Initialize WhatsApp client with error handling
+// Initialize WhatsApp client with error handling and timeout
 console.log('Starting WhatsApp client initialization...');
 console.log('Chromium path:', process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium');
+
+// Add initialization timeout (2 minutes)
+const INIT_TIMEOUT = 120000;
+
+const initializationTimeout = setTimeout(() => {
+  if (!isClientReady && !initializationComplete) {
+    console.error('\n⏰ WhatsApp client initialization timeout!');
+    console.error('The client has been stuck for more than 2 minutes.');
+    console.error('Please check the logs and restart manually if needed.');
+  }
+}, INIT_TIMEOUT);
+
+client.on('ready', () => {
+  initializationComplete = true;
+  clearTimeout(initializationTimeout);
+  console.log('✅ WhatsApp bot is ready!');
+  isClientReady = true;
+});
+
+client.on('authenticated', () => {
+  console.log('✅ WhatsApp authenticated successfully');
+  console.log('Loading WhatsApp Web interface...');
+});
+
+client.on('auth_failure', (msg) => {
+  initializationComplete = true;
+  clearTimeout(initializationTimeout);
+  console.error('❌ Authentication failure:', msg);
+  console.error('Clearing auth cache and restarting...');
+  process.exit(1);
+});
 
 client.initialize()
   .then(() => {
     console.log('WhatsApp client initialization started successfully');
+    console.log('Waiting for authentication...');
   })
   .catch(err => {
+    initializationComplete = true;
+    clearTimeout(initializationTimeout);
     console.error('❌ Failed to initialize WhatsApp client:', err);
     console.error('Error stack:', err.stack);
     console.error('\nThis might be due to:');
@@ -217,7 +252,7 @@ client.initialize()
     console.error('2. Insufficient system resources');
     console.error('3. Network connectivity issues');
     console.error('4. Incorrect Chromium path');
-    
+
     // Don't exit immediately, let's see if we can get more info
     setTimeout(() => {
       console.error('Exiting due to initialization failure...');
@@ -501,9 +536,17 @@ app.get('/', (req, res) => {
 });
 
 app.get('/health', (req, res) => {
-  res.json({ 
-    status: 'running',
+  const uptime = Date.now() - startTime;
+  const uptimeSeconds = Math.floor(uptime / 1000);
+
+  // If not ready after 2 minutes, consider unhealthy
+  const isHealthy = isClientReady || uptimeSeconds < 120;
+
+  res.status(isHealthy ? 200 : 503).json({
+    status: isHealthy ? 'healthy' : 'unhealthy',
     whatsappReady: isClientReady,
+    initializationComplete: initializationComplete,
+    uptimeSeconds: uptimeSeconds,
     timestamp: new Date().toISOString()
   });
 });
